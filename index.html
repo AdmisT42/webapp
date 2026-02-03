@@ -3,26 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clicker Bot</title>
+    <title>Farm Bot Web</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Coin Clicker</h1>
-        <div class="score-container">
-            <span id="score">0</span> 💰
+    <!-- Верхняя панель (Баланс) -->
+    <div class="header">
+        <div class="balance-box">
+            <i class="fas fa-coins coin-icon"></i>
+            <span id="balance">0</span>
         </div>
-        
-        <div class="click-area">
-            <button id="click-btn" class="coin-btn">
-                👆 КЛИК!
-            </button>
+        <div class="balance-box token-box">
+            <i class="fas fa-gem token-icon"></i>
+            <span id="tokens">0</span>
+        </div>
+    </div>
+
+    <!-- Основной контент (меняется в зависимости от вкладки) -->
+    <div id="content" class="content">
+        <!-- Вкладка: Кликер (Главная) -->
+        <div id="tab-clicker" class="tab-content active">
+            <div class="clicker-area">
+                <div class="clicker-circle" id="click-btn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2662/2662503.png" alt="Click">
+                </div>
+            </div>
+            <div class="energy-bar">
+                <div class="energy-fill" style="width: 100%;"></div>
+                <span class="energy-text">1000/1000</span>
+            </div>
         </div>
 
-        <div class="info">
-            <p>Твое имя: <span id="username">...</span></p>
+        <!-- Вкладка: Ферма -->
+        <div id="tab-farm" class="tab-content">
+            <h2>Моя Ферма</h2>
+            
+            <h3>Инструменты</h3>
+            <div class="shop-list horizontal-scroll" id="hoes-list">
+                <!-- Мотыги -->
+            </div>
+
+            <h3>Грядки</h3>
+            <div class="farm-grid" id="farm-grid">
+                <!-- Грядки генерируются JS -->
+            </div>
         </div>
+
+        <!-- Вкладка: Спавнеры (Магазин + Майнинг) -->
+        <div id="tab-spawners" class="tab-content">
+            <div class="mining-header">
+                <div class="mining-stat">
+                    <span>Доход в час:</span>
+                    <span id="income-per-hour" class="highlight">0</span>
+                </div>
+                <div class="mining-stat">
+                    <span>Накоплено:</span>
+                    <span id="mining-accumulated" class="highlight">0</span>
+                </div>
+                <button class="action-btn collect-btn" onclick="collectIncome()">Собрать</button>
+            </div>
+            
+            <h3>Мои Спавнеры</h3>
+            <div class="shop-list" id="my-spawners-list"></div>
+
+            <h3>Магазин Спавнеров</h3>
+            <div class="shop-list" id="shop-list"></div>
+        </div>
+
+        <!-- Вкладка: Мечи -->
+        <div id="tab-swords" class="tab-content">
+            <h2>Оружейная</h2>
+            <div class="shop-list" id="swords-list">
+                <!-- Мечи генерируются JS -->
+            </div>
+
+            <h3>Зачарования</h3>
+            <div class="shop-list" id="enchantments-list">
+                <!-- Зачарования генерируются JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигация -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchTab('clicker')">
+            <i class="fas fa-mouse"></i>
+            <span>Кликер</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('farm')">
+            <i class="fas fa-seedling"></i>
+            <span>Ферма</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('spawners')">
+            <i class="fas fa-cubes"></i>
+            <span>Спавнеры</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('swords')">
+            <i class="fas fa-khanda"></i>
+            <span>Мечи</span>
+        </button>
     </div>
 
     <script src="script.js"></script>

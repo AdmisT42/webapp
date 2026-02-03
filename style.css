@@ -1,72 +1,368 @@
 :root {
-    --bg-color: var(--tg-theme-bg-color, #1a1a1a);
-    --text-color: var(--tg-theme-text-color, #ffffff);
-    --button-color: var(--tg-theme-button-color, #3390ec);
-    --button-text-color: var(--tg-theme-button-text-color, #ffffff);
-    --secondary-bg: var(--tg-theme-secondary-bg-color, #2c2c2c);
+    --bg-color: #1c1c1e;
+    --card-bg: #2c2c2e;
+    --primary: #3390ec;
+    --text: #ffffff;
+    --secondary-text: #8e8e93;
+    --gold: #ffd700;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg-color);
-    color: var(--text-color);
+    color: var(--text);
+    overflow: hidden; /* Чтобы не скроллилось всё окно */
+}
+
+/* Хедер */
+.header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(44, 44, 46, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.balance-box {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
     align-items: center;
+    gap: 8px;
+}
+
+.coin-icon { color: var(--gold); }
+.token-icon { color: #00f0ff; }
+
+/* Контент */
+.content {
     height: 100vh;
-    overflow: hidden;
-    user-select: none; /* Отключаем выделение текста */
-    -webkit-user-select: none;
+    padding-top: 70px;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
-.container {
-    text-align: center;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
+.tab-content {
+    display: none;
+    padding: 15px;
+    animation: fadeIn 0.3s;
 }
 
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+.tab-content.active {
+    display: block;
 }
 
-.score-container {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 40px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.coin-btn {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: none;
-    background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 5px 15px rgba(255,255,255,0.4);
-    font-size: 24px;
-    font-weight: bold;
-    color: #5a3e00;
-    cursor: pointer;
-    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* Кликер */
+.clicker-area {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
+    height: 60vh;
 }
 
-.coin-btn:active {
+.clicker-circle {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #4a4a4a, #2c2c2e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.1s;
+    user-select: none;
+}
+
+.clicker-circle:active {
     transform: scale(0.95);
 }
 
-.info {
-    margin-top: 40px;
+.clicker-circle img {
+    width: 60%;
+    pointer-events: none;
+}
+
+.energy-bar {
+    margin: 20px;
+    background: #333;
+    height: 20px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.energy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    transition: width 0.3s;
+}
+
+.energy-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    text-shadow: 0 0 3px black;
+}
+
+/* Навигация */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(44, 44, 46, 0.9);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #3a3a3c;
+    z-index: 100;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.nav-btn i {
+    font-size: 20px;
+}
+
+.nav-btn.active {
+    color: var(--primary);
+}
+
+/* Общие стили для списков */
+.shop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.horizontal-scroll {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.shop-item {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0; /* Для горизонтального скролла */
+}
+
+.shop-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.shop-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 15px;
+}
+
+.shop-info h5 {
+    margin: 0 0 5px 0;
     font-size: 14px;
-    color: var(--text-color);
+}
+
+.shop-info p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--secondary-text);
+}
+
+.buy-btn {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.buy-btn:disabled, .buy-btn.disabled {
+    background: #555;
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Ферма */
+.farm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.farm-slot {
+    aspect-ratio: 1;
+    background: #3a3a3c;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.farm-slot.ready {
+    border-color: #4cd964;
+    background: rgba(76, 217, 100, 0.1);
+}
+
+.plant-emoji {
+    font-size: 32px;
+}
+
+.timer {
+    font-size: 12px;
+    margin-top: 5px;
+    color: var(--secondary-text);
+}
+
+/* Семена */
+.seeds-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.seed-item {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 10px;
+    min-width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.seed-item.active {
+    border-color: var(--primary);
+    background: rgba(51, 144, 236, 0.1);
+}
+
+.seed-item.cooldown {
     opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.cooldown-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.seed-emoji { font-size: 24px; margin-bottom: 5px; }
+.seed-info { text-align: center; }
+.seed-info span { display: block; font-size: 12px; }
+.seed-progress { color: var(--secondary-text); font-size: 10px !important; }
+
+/* Mining Styles */
+.mining-header {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mining-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--secondary-text);
+}
+
+.mining-stat .highlight {
+    color: var(--gold);
+    font-weight: bold;
+}
+
+.collect-btn {
+    width: 100%;
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    border: none;
+    color: black;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.collect-btn:active {
+    transform: scale(0.98);
+}
+
+.upgrade-btn {
+    background: #4cd964;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.enchant-btn {
+    background: #bf5af2;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-top: 5px;
+    cursor: pointer;
 }
